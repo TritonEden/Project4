@@ -63,8 +63,9 @@ int main(int argc, char *argv[]) {
 		visited[i] = 0;
 	}
 
-	// set distance of start node manually
+	// set distance and backlink of start node manually
 	distance[startRow + startCol * 10] = tNums[startRow + startCol * 10];
+	backL[0] = -1;
 
 	// making vectors to print the gradescripts
 	vector<int> outputRow;
@@ -105,26 +106,73 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}
+	
+	// outputing to match the grade scripts
+	cout << distance[endRow + (endCol * 10)] - tNums[endRow + (endCol * 10)] << endl;
+	int back = endRow + (endCol * 10);
+	int it = 0;
+	// create array to store location of tiles traveled through
+	int tFinal[tRows*tCols];
+	int tMath;
+	for (unsigned char i = 0; i < (tRows * tCols); i++) {
+		tFinal[i] = 10000;
+	}
 
-	int inc = 0;
-	//cout << distance[endRow + (endCol * 10)] - tNums[endRow + (endCol * 10)] << endl;
+	while (backL[back] != -1) {
+		tFinal[it] = back;
+		back = backL[back];
+		it++;
+	}
+	for (int i = 0; i < tRows*tCols; i++) {
+		if(tFinal[i] != 10000) {
+			tMath = tFinal[i]/10;
+			cout << tFinal[i] - (10*tMath) << " " << tMath << endl;
+		}
+		else {
+			i = 1000;
+		}
+	}
+	cout << "0 0" << endl;
+
+	// checking stuff
+
+	/*int inc = 0;
 	for (int i = 0; i < tRows * tCols; i++) {
 		if (inc == tCols) {
-			//cout << endl;
+			cout << endl;
 			inc = 0;
 		}
-		//cout << distance[i] << " ";
+		cout << backL[i] << " ";
 		inc++;
 	}
-	//cout << endl;
+	cout << endl;*/
+
+	/*for (int i = 0; i < tNum; i++) {
+		cout << tFinal[i] << " ";
+	}
+	cout << endl;*/
+
+	// checking final distance vector
+	/* 	
+	int inc = 0;
+	for (int i = 0; i < tRows * tCols; i++) {
+		if (inc == tCols) {
+			cout << endl;
+			inc = 0;
+		}
+		cout << distance[i] << " ";
+		inc++;
+	}
+	cout << endl;*/
+	
 
     // input testing
-	cout << tNum << endl;
+	/*cout << tNum << endl;
 
 	for (int i = 0; i < tNum; i++) {
 		cout << tName[i] << " " << tCost[i] << endl;
 	}
-	/*cout << tRows << " " << tCols << endl;
+	cout << tRows << " " << tCols << endl;
 	for (unsigned char i = 0; i < tRows; i++) {
 		for (unsigned char j = 0; j < tCols; j++) {
 			cout << tData[i][j] << " ";
