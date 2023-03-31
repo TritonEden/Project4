@@ -5,12 +5,6 @@
 
 using namespace std;
 
-/*void dijsktras(int tRows, int tCols, int tNums[][], int startRow, int startCol, int endRow, int endCol) {
-
-    
-
-}*/
-
 // Main Execution
 
 int main(int argc, char *argv[]) {
@@ -38,12 +32,12 @@ int main(int argc, char *argv[]) {
 	cin >> endRow >> endCol;
 
     // changing the table of characters to actual numerical weights of each tile
-    int tNums[tRows][tCols];
-    for (int i = 0; i < tRows; i++) {
-        for (int j = 0; j < tCols; j++) {
+    int tNums[tRows * tCols];
+    for (int i = 0; i < tCols; i++) {
+        for (int j = 0; j < tRows; j++) {
             for (int k = 0; k < tNum; k++){
                 if (tName[k] == tData[i][j]) {
-                    tNums[i][j] = tCost[k];
+                    tNums[j + (i * 10)] = tCost[k];
                 }
             }
         }
@@ -52,17 +46,85 @@ int main(int argc, char *argv[]) {
     // 2D array initialized to false storing what nodes have been visited
     //bool visited[tRows][tCols] = {false};
 
-    // run dijkstras function to match output from the write-up
-    
-    
+	// a 2D array that stores the distances of each node from the starting node
+	// all distances are initialized to infinity (99)
+	int distance[tRows * tCols];
 
-    // output testing
-	/*cout << tNum << endl;
+	// create previous 2D array that stores backlinks
+	int backL[tRows * tCols];
+
+	// visited array initialized to false
+	int visited[tRows * tCols];
+
+	// initialize arrays
+	for (unsigned char i = 0; i < (tRows * tCols); i++) {
+		distance[i] = 999;
+		backL[i] = i;
+		visited[i] = 0;
+	}
+
+	// set distance of start node manually
+	distance[startRow + startCol * 10] = tNums[startRow + startCol * 10];
+
+	// making vectors to print the gradescripts
+	vector<int> outputRow;
+	vector<int> outputCol;
+
+	// making values to check for nearest node
+	int minValue;
+	int minNode;
+
+    // run dijkstras function to match output from the write-up
+
+	for (int i = 0; i < tRows * tCols; i++) {
+		// get minimum reachable univisited
+		minValue = 99;
+		minNode = 0;
+		for (int j = 0; j < (tRows * tCols) - 1; j++) {
+			if (visited[j] == 0 && distance[j] < minValue) {	
+				minValue = distance[j];
+				minNode = j;
+			}
+		}
+		visited[minNode] = 1;
+		// update the distance cost for all of minNode's adjacent nodes
+		// this update occurs only if the adjacent node distance < current distance
+		// keep track of backlinks
+		// account for the last column and row using if statements
+		// minNode+1 != 10 && minNode+1 != 20 && minNode+1 != 30 && minNode+1 != 40 && minNode+1 != 50 && minNode+1 != 60 && minNode+1 != 70 && minNode+1 != 80 && minNode+1 != 90 && minNode+1 < 100
+		if (distance[minNode+1] > tNums[minNode+1] + distance[minNode]) {
+			if (minNode+1 < tRows * tCols) {
+				distance[minNode+1] = tNums[minNode+1] + distance[minNode];
+				backL[minNode+1] = minNode;
+			}
+		}
+		if (distance[minNode+10] > tNums[minNode+10] + distance[minNode]) {
+			if (minNode+10 < (tCols * 10)) {
+				distance[minNode+10] = tNums[minNode+10] + distance[minNode];
+				backL[minNode+10] = minNode;
+			}
+		}
+	}
+
+	int inc = 0;
+	//cout << distance[endRow + (endCol * 10)] - tNums[endRow + (endCol * 10)] << endl;
+	for (int i = 0; i < tRows * tCols; i++) {
+		if (inc == tCols) {
+			//cout << endl;
+			inc = 0;
+		}
+		//cout << distance[i] << " ";
+		inc++;
+	}
+	//cout << endl;
+
+    // input testing
+	cout << tNum << endl;
 
 	for (int i = 0; i < tNum; i++) {
 		cout << tName[i] << " " << tCost[i] << endl;
 	}
-	cout << tRows << " " << tCols << endl;
+	/*cout << tRows << " " << tCols << endl;
 	for (unsigned char i = 0; i < tRows; i++) {
 		for (unsigned char j = 0; j < tCols; j++) {
 			cout << tData[i][j] << " ";
@@ -70,10 +132,7 @@ int main(int argc, char *argv[]) {
 		cout << endl;
 	}
 	cout << startRow << " " << startCol << endl;
-	cout << endRow << " " << endCol << endl;
-    */ 
+	cout << endRow << " " << endCol << endl;*/
 
 	return 0;
 }
-
-
